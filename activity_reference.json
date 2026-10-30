@@ -1,0 +1,22 @@
+{
+  "source": "SITUATIONAL_GEOMETRY_ACTIVITY_AGGREGATION.csv",
+  "total_records": 20949,
+  "groups": {
+    "Transport": 5321,
+    "Sleep": 4646,
+    "Home": 4138,
+    "Walk": 1664,
+    "Other (42 labels)": 1268,
+    "Shopping": 882,
+    "Mindfulness": 748,
+    "Medical": 510,
+    "Drinks": 366,
+    "XXX": 301,
+    "Dinner": 268,
+    "Friends/Family": 199,
+    "Park": 178,
+    "Groceries": 158,
+    "Casino": 154,
+    "Legal": 148
+  }
+}

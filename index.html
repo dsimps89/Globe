@@ -1,0 +1,424 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Situational Geometry V15 | Correct Outside-Facing Globe</title><style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#07101b;color:#e0f3fb;font:14px system-ui}header{padding:12px 16px;background:#0d1d30;border-bottom:1px solid #36556b;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}h1{font-size:19px;margin:0;color:#92e8fa}h2{font-size:14px;color:#a4eaf7;margin:0 0 9px}small,.hint{color:#aac1d1;font-size:12px}.layout{display:grid;grid-template-columns:minmax(0,1fr) 325px;gap:12px;padding:12px;max-width:1600px;margin:auto}.stage{min-width:0}.sphereBox{position:relative;border:1px solid #31536a;border-radius:13px;overflow:hidden;background:#08192b;min-height:360px}#scene{display:block;width:100%;height:min(78vh,800px);min-height:360px;touch-action:none}#video{display:none}#cameraPreview{position:absolute;right:12px;bottom:12px;width:25%;max-width:190px;aspect-ratio:4/3;border:1px solid #87bfd2;border-radius:8px;background:#07111c;object-fit:cover;transform:scaleX(-1)}.status{position:absolute;top:12px;left:12px;pointer-events:none;background:#081624cf;border:1px solid #2e5268;border-radius:8px;padding:9px;max-width:70%;font-size:12px}.status strong{color:#a6f0f2}.bar{display:flex;gap:6px;flex-wrap:wrap;padding:9px 0}.pill{border:1px solid #41677d;border-radius:7px;padding:5px 8px;color:#b5d6e7;font-size:11px}.panel{background:#0f2133;border:1px solid #2b4d64;border-radius:11px;padding:13px;margin-bottom:11px}label{display:block;font-size:12px;color:#c1d9e5;margin:9px 0 4px}button,select,input{font:inherit}button,select{background:#16344b;color:#e1f6ff;border:1px solid #4b7890;border-radius:7px;padding:9px;cursor:pointer}button:hover{background:#22506c}input[type=range]{width:100%}input[type=number]{width:85px;background:#0a1829;border:1px solid #4a6c7c;color:white;padding:7px;border-radius:6px}button:disabled{opacity:.5} .row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.metricgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.metric{border:1px solid #294d65;background:#0b1a2b;border-radius:7px;padding:9px}.metric b{display:block;font-size:19px;color:#8ae8e9}.metric small{display:block}.key{display:grid;grid-template-columns:1fr 1fr;gap:7px}.key span{font-size:12px}.sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px}.notice{color:#f5c68d;font-size:12px;line-height:1.5}.mono{font-variant-numeric:tabular-nums}.footer{font-size:12px;color:#a7c5d4;padding:0 12px 20px;max-width:1600px;margin:auto}@media(max-width:900px){.layout{grid-template-columns:1fr}.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:10px}.panel{margin:0}#scene{height:60vh;min-height:390px}}@media(max-width:480px){.layout{padding:7px}#scene{height:54vh}.status{font-size:10px;max-width:77%}#cameraPreview{width:22%}}
+.v13readout{margin:9px 0;padding:12px 14px;background:#15334b;border-left:4px solid #70e3f3;border-radius:8px;line-height:1.5}
+.v13card{margin-top:12px;padding:11px 13px;border:1px solid #3a6479;background:#091a2b;border-radius:9px;font-size:12px;line-height:1.6}
+.v13card p{margin:4px 0 11px;color:#b7d0dc}.v13card b{color:#d8f6ff}
+.v13legend{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;margin:10px 0}
+.v13legend div{text-align:center;padding:8px 2px;border-radius:4px;font-size:10px;color:#fff;text-shadow:0 1px 3px #000}
+.v13land{color:#ffde9d;font-weight:bold}
+#scene{cursor:crosshair}
+#v14Zoom{width:100%;accent-color:#7be5ef;height:27px}.v14box{background:#081b2c;border:1px solid #4b7b91;border-radius:10px;padding:12px;margin-bottom:12px}.v14box b{color:#c6f7ff}.v14read{padding:8px 0;border-bottom:1px solid #244457;color:#b9e1ed;font-size:12px;line-height:1.5}#v14Level{float:right;color:#f2ce92}.v14box .row{margin:6px 0;display:flex;gap:5px;flex-wrap:wrap}.v14box button{padding:8px}.v14box label{display:inline-block;margin-right:12px}
+#v16Panel{border:1px solid #4a7f96}.v16note,.v16read{font-size:12px;line-height:1.5;color:#b9dbe8;margin:8px 0}.v16toolbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:9px 0}.v16toolbar button{padding:9px}.v16toolbar label{font-size:12px}#v16CameraBox{position:relative;width:100%;aspect-ratio:4/3;background:#030d15;border:1px solid #44778e;overflow:hidden;border-radius:9px}#v16Camera{width:100%;height:100%;object-fit:contain}#v16Overlay{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}.v16corner{position:absolute;bottom:5px;left:7px;font-size:11px;background:#04131cc9;padding:5px;pointer-events:none}.v16metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.v16metrics>div{padding:8px;background:#0a2132;border:1px solid #34586a;border-radius:6px}.v16metrics b{display:block;font-size:17px;color:#a5f1ed}.v16metrics small{font-size:10px}.v16scales{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}.v16scales>div{background:#0a2032;padding:8px;border:1px solid #34586a;border-radius:7px}.v16scales b{color:#c1f4fc}.v16scales small{display:block;color:#a4becd;font-size:10px}.v16scales strong{display:block;color:#f2c37e;font-size:14px}body.v16expanded #v16CameraBox{position:fixed;z-index:1000;inset:4vh 2vw;width:96vw;height:85vh;aspect-ratio:auto;border:2px solid #85e9f5}body.v16expanded #v16Camera{object-fit:contain}@media(max-width:550px){.v16scales{grid-template-columns:repeat(3,1fr)}} </style></head><body><header><div><h1>SITUATIONAL GEOMETRY · LIVE INFLUENCE ATLAS</h1><small>One map with readable names, actual source counts, scale-specific evidence, and explicitly labeled simulations.</small></div><div id="clock" class="mono">--:--:--</div></header><div class="layout"><div class="stage"><div class="sphereBox"><canvas id="scene"></canvas><video id="video" autoplay muted playsinline></video><video id="cameraPreview" autoplay muted playsinline></video><div class="status" id="status">INITIALIZING · Camera is optional<br><strong>Observed and simulated layers are distinct.</strong></div></div><div id="v13Readout" class="v13readout" aria-live="polite">Tap the sphere to inspect the model at a location. Tap a country label for geographic context.</div><div class="bar"><span class="pill" id="locationLabel">GPS not acquired</span><span class="pill" id="orientLabel">Orientation unavailable</span><span class="pill" id="sampleLabel">0 samples</span><span class="pill" id="modelLabel">MODEL / NOT SURVEYED</span></div><div class="panel" id="v16Panel"><h2>LIVE CAMERA → GRID → MULTISCALE INFLUENCE</h2>
+<div class="v16note">Live image-cell motion is measured. Object identification, depth, influence at larger distances and population response are <b>not</b> measured. The model projects only a labeled hypothetical response.</div>
+<div class="v16toolbar"><button id="v16Expand">Expand camera / grid</button><button id="v16Select">Select grid cells</button><button id="v16Clear">Clear selection</button><button id="v16Capture">Save selection + samples</button></div>
+<div id="v16CameraBox"><video id="v16Camera" autoplay muted playsinline></video><canvas id="v16Overlay"></canvas><div class="v16corner">CAMERA GRID · X/Y pixels · Z unknown</div></div>
+<div class="v16read" id="v16Read">Start the camera. Grid-cell measurements will appear here.</div>
+<div class="v16metrics"><div><b id="v16Hot">0</b><small>Active cells</small></div><div><b id="v16Speed">—</b><small>Motion change/s</small></div><div><b id="v16Selected">0</b><small>Selected cells</small></div><div><b id="v16Depth">UNKNOWN</b><small>Z depth</small></div></div>
+<div class="v16toolbar"><label>Grid <select id="v16Grid"><option value="6">6 × 6</option><option value="8" selected>8 × 8</option><option value="12">12 × 12</option><option value="16">16 × 16</option></select></label><label>Motion threshold <input type="range" id="v16Threshold" min="3" max="45" value="12"></label><label>Influence decay <select id="v16Decay"><option value="1">Fast</option><option value="2" selected>Medium</option><option value="4">Slow</option></select></label></div>
+<div class="v16note" id="v16GPS">Camera's MGRS origin is the PHONE GPS when available. Camera cells are image-plane bins, not geolocated ground parcels.</div>
+<div class="v16scales" id="v16Scales"></div>
+</div><div class="panel"><h2>CONTINUOUS GEOGRAPHIC ZOOM · MGRS</h2>
+<div class="v14box"><div><b id="v14Scale">Radius: 500 m</b> <span id="v14Level">L2</span></div>
+<input id="v14Zoom" type="range" min="-2" max="7.30103" step="0.001" value="2.69897" aria-label="Continuous logarithmic zoom">
+<div class="row"><button id="v14In">− Zoom 2×</button><button id="v14Out">+ Zoom 2×</button><button id="v14Gps">Locate phone / GPS</button><button id="v14North">North-up</button></div>
+<div class="v14read" id="v14MGRS">MGRS awaiting reference</div>
+<div class="v14read" id="v14Camera">Camera position: not georeferenced until GPS is obtained</div>
+<div class="v14read"><b>OUTSIDE VIEW</b> · Country borders are drawn on the near hemisphere. East is right of north-up centre.</div><div class="v14read" id="v14GridInfo">Metric grid: calculating…</div>
+<label><input id="v14MGRSLabels" type="checkbox" checked> MGRS square labels</label>
+<label><input id="v14CamMarker" type="checkbox" checked> Camera position + heading</label>
+<label><input id="v14Invert" type="checkbox"> Invert vertical pan gesture</label>
+</div><h2>GEOGRAPHIC NAVIGATION</h2><div class="row"><button id="levelDown">− Finer scale</button><button id="levelUp">+ Wider scale</button><button id="homeView">Centre on reference</button><button id="northUp">North up</button></div><div class="row"><button id="panLeft">◀ Pan</button><button id="panUp">▲ Pan</button><button id="panDown">▼ Pan</button><button id="panRight">Pan ▶</button></div><div class="row"><label><input id="borders" type="checkbox" checked> Country borders</label><label><input id="countryLabels" type="checkbox" checked> Country labels</label><label><input id="contour" type="checkbox" checked> Synthetic relief contours</label></div><div id="scaleReadout" class="hint">L2 / 500 m model radius</div><div id="mapLegend" class="hint">Terrain colours = modeled domain intensity, not actual elevation.</div><div id="v13Legend" class="v13legend"></div><div id="v13ScaleEvidence" class="v13card">Loading evidence for this scale…</div><p class="notice">Drag to pan local maps (L1–L6), rotate globe at L7–L9. Scroll/pinch zooms continuously; +/- changes geographic level. Country borders are sourced from Natural Earth, not generated by the scenario model.</p></div><div class="panel"><h2>WHAT THIS MAP TELLS YOU</h2><div id="insight" class="hint">Start the camera for measured optical motion. The neighbourhood actors and 3D terrain are simulated.</div><div id="v13Detail" class="v13card"><b>Inspect a location</b><p>Tap a map point to see a model index and its limitations. The location is only georeferenced at the local scales if GPS is enabled.</p></div></div><div class="panel"><h2>24-HOUR TIMELINE · OBSERVATIONS VS SCENARIOS</h2><canvas id="timeline" style="width:100%;height:125px" width="1000" height="125"></canvas><div class="hint">Cyan marks recorded optical samples. Orange is the simulated hourly scenario pulse. Missing observations remain missing.</div></div></div><div class="controls"><section class="panel"><h2>START HERE · WHAT IS REAL?</h2><div class="v13card"><b>GEOGRAPHIC REFERENCE</b><p>Country outlines from bundled Natural Earth geometry. Country centers are approximate and borders generalized.</p><b>HISTORICAL COUNTS</b><p>20,949 activity records across 16 groups. The records have no country or neighbourhood locations.</p><b>CAMERA OBSERVATION</b><p>Optical frame change and manually calibrated distances, when permissions and reference length are supplied.</p><b>SIMULATED FIELD</b><p>Colours, relief and moving dots are hypothetical. They are not measured conditions in the country or city underneath.</p></div><div class="v13card" id="v13TopGroups">Loading historical activity counts…</div></section><section class="panel"><h2>01 · LIVE CAMERA & GEOMETRY</h2><div class="row"><button id="start">Start camera</button><button id="stop">Stop</button><button id="sensor">Enable orientation</button></div><label>Image-plane calibration (known length)</label><div class="row"><input type="number" id="known" min="0.1" step="0.1" value="30"><select id="units"><option value="cm">cm</option><option value="m">m</option><option value="ft">ft</option></select><button id="cal">Mark 2 points</button><button id="measure">Measure 2 points</button></div><div id="calText" class="hint">No scale. Tap two points on the camera preview after selecting calibration. Same-plane only.</div><label>Motion sensitivity <span id="sensValue">30</span></label><input id="sensitivity" type="range" min="5" max="95" value="30"><div class="metricgrid"><div class="metric"><b id="motionValue">—</b><small>Optical change (%)</small></div><div class="metric"><b id="distanceValue">—</b><small>Marked distance</small></div></div></section><section class="panel"><h2>02 · ONE SPHERE CONTROLS</h2><label>Scale / radius</label><select id="scale"><option value="1">L1 · room · 5 m model</option><option value="2" selected>L2 · neighbourhood · 500 m radius</option><option value="3">L3 · local · 1 km</option><option value="4">L4 · district · 10 km</option><option value="5">L5 · region · 100 km</option><option value="6">L6 · community pulse · 250 km</option><option value="7">L7 · national · 1,000 km</option><option value="8">L8 · continental · 5,000 km</option><option value="9">L9 · Earth · global</option></select><label>Scenario domain</label><select id="domain"><option>Community</option><option>Mobility</option><option>Finance</option><option>Health</option><option>Culture</option><option>Commerce</option><option>Environment</option><option>Governance</option><option>Education</option><option>Infrastructure</option><option>Conflict / disruption</option><option>Recovery</option><option>Personal activity</option></select><label>Scenario intensity <span id="intValue">100%</span></label><input type="range" id="intensity" min="0" max="200" value="100"><label>Actor density <span id="actorValue">150</span> (synthetic)</label><input type="range" id="actors" min="0" max="500" value="150" step="10"><label>Terrain relief <span id="reliefValue">70%</span></label><input type="range" id="relief" min="0" max="150" value="70"><label>Time</label><div class="row"><label style="margin:0"><input id="auto" type="checkbox" checked> Auto local time</label><button id="play">▶ 24h replay</button></div><input type="range" id="hour" min="0" max="23" value="12"><div class="hint" id="hourLabel">12:00</div></section><section class="panel"><h2>03 · GEOGRAPHY, PUZZLES & LAYERS</h2><div class="row"><button id="gps">Use GPS</button><button id="resetView">Reset sphere</button></div><div id="coords" class="hint">Location not acquired. Geographic position cannot be inferred from camera pixels.</div><label>Workbook puzzle (200 records)</label><select id="puzzle"><option>Loading…</option></select><div id="puzzleText" class="hint">Puzzle connections are inferred, not verified.</div><label>Visual layers</label><div class="row"><label><input id="v13Names" type="checkbox" checked> Country & continent names</label><label><input id="v13GridLabels" type="checkbox" checked> Distance labels</label><label><input id="v13ValueLabels" type="checkbox" checked> Sample model values</label></div><div class="key"><label><input id="showCamera" type="checkbox" checked> <span class="sw" style="background:#63e6f4"></span>Camera texture</label><label><input id="showGrid" type="checkbox" checked> <span class="sw" style="background:#b1c2dd"></span>Sphere grid</label><label><input id="showActors" type="checkbox" checked> <span class="sw" style="background:#f4c16b"></span>Simulated actors</label><label><input id="showMirrors" type="checkbox" checked> <span class="sw" style="background:#ba95fb"></span>Life mirrors</label><label><input id="showTerrain" type="checkbox" checked> <span class="sw" style="background:#71e0a7"></span>Terrain pulse</label><label><input id="showPuzzles" type="checkbox" checked> <span class="sw" style="background:#f98ac1"></span>Puzzle anchors</label></div><p class="notice">The grid is an application metric scale; the MGRS display uses approximate UTM calculations. Country borders are geographic reference geometry. This tool shows GPS coordinates and metric scale; it does not claim a validated MGRS string or measured citywide population.</p></section><section class="panel"><h2>04 · READINGS, SAVING & PROVENANCE</h2><div class="metricgrid"><div class="metric"><b id="heading">—</b><small>Heading °</small></div><div class="metric"><b id="pitch">—</b><small>Pitch °</small></div><div class="metric"><b id="roll">—</b><small>Roll °</small></div><div class="metric"><b id="pulse">—</b><small>Scenario index /100</small></div><div class="metric"><b id="activity">20,949</b><small>Historical activity records</small></div><div class="metric"><b id="community">25,000</b><small>Synthetic community size</small></div></div><div class="row" style="margin-top:12px"><button id="png">Save sphere PNG</button><button id="json">Export evidence JSON</button><button id="clearHistory">Clear local samples</button></div><div class="hint" style="margin-top:8px">Drag globe to rotate (L7–L9); drag local levels to pan. Scroll to zoom. Double-tap to recenter. Live camera frames stay in this page; exports include the current sphere image or numerical samples only.</div></section></div></div><div class="footer">DATA STATUS · OBSERVED: camera optical changes and optional phone orientation/GPS. CALIBRATED: two-point planar length. HISTORICAL: 20,949 activity records and 200 puzzle records. SIMULATED: 25,000-agent community reference, actor paths, terrain and scenario pulse. A camera alone cannot reconstruct true depth or detect unseen people.</div>
+<script>
+'use strict';const $=id=>document.getElementById(id),TAU=2*Math.PI;const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));const canvas=$('scene'),ctx=canvas.getContext('2d'),timeCanvas=$('timeline'),tc=timeCanvas.getContext('2d');let stream=null,pxPerCm=null,calMode='',points=[],lastFrame=null,motion=null,heading=null,pitch=null,roll=null,coords=null,activity=null,puzzles=[],samples=[],lastSample=0,drag=false,prev=null,rotationX=.25,rotationY=-.35,zoom=1,clockHour=-1,playing=false,lastPlay=0,frameCount=0;let viewWidth=700,viewHeight=600;let countries=[],panX=0,panY=0,focusLon=-82.19,focusLat=42.40;const layerIds=['showCamera','showGrid','showActors','showMirrors','showTerrain','showPuzzles'];const RADIUS={1:5,2:500,3:1000,4:10000,5:100000,6:250000,7:1000000,8:5000000,9:20000000};const groupsDefault={'Transport':5321,'Sleep':4646,'Home':4138,'Walk':1664,'Other':1268};
+function resize(){const dpr=Math.min(devicePixelRatio||1,2),r=canvas.getBoundingClientRect();viewWidth=r.width;viewHeight=r.height;canvas.width=Math.round(r.width*dpr);canvas.height=Math.round(r.height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}addEventListener('resize',resize);resize();
+function download(name,blob){const a=document.createElement('a'),u=URL.createObjectURL(blob);a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),5000)}
+function seeded(i,k=0){let x=Math.sin(i*127.1+k*311.7)*43758.5453;return x-Math.floor(x)}
+function pulse(domain,h){let seed=['Community','Mobility','Finance','Health','Culture','Commerce','Environment','Governance','Education','Infrastructure','Conflict / disruption','Recovery','Personal activity'].indexOf(domain)+1;let base=.48+.23*Math.sin((h-7)/24*TAU+seed*.49)+.12*Math.sin((h*2)/24*TAU-seed*.81);return clamp(base*(+$('intensity').value/100),0,1)}
+function selectedHour(){return +$('hour').value}function syncClock(){let d=new Date();$('clock').textContent=d.toLocaleTimeString();if($('auto').checked&&d.getHours()!==clockHour){$('hour').value=d.getHours();clockHour=d.getHours()}$('hour').disabled=$('auto').checked;$('hourLabel').textContent=String(selectedHour()).padStart(2,'0')+':00 '+($('auto').checked?'(local clock)':'(simulation)');$('pulse').textContent=Math.round(pulse($('domain').value,selectedHour())*100)}setInterval(syncClock,1000);syncClock();
+$('auto').onchange=()=>{clockHour=-1;syncClock()};$('play').onclick=()=>{playing=!playing;$('auto').checked=false;$('play').textContent=playing?'■ Pause':'▶ 24h replay';syncClock()};$('intensity').oninput=()=>{$('intValue').textContent=$('intensity').value+'%'};$('actors').oninput=()=>{$('actorValue').textContent=$('actors').value};$('relief').oninput=()=>{$('reliefValue').textContent=$('relief').value+'%'};$('sensitivity').oninput=()=>{$('sensValue').textContent=$('sensitivity').value};
+async function startCamera(){try{if(stream)return;stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:640},height:{ideal:480}},audio:false});$('video').srcObject=stream;$('cameraPreview').srcObject=stream;await Promise.allSettled([$('video').play(),$('cameraPreview').play()]);$('status').innerHTML='CAMERA ACTIVE · <strong>Optical motion is observed; actors and terrain are modeled.</strong>'}catch(e){$('status').textContent='Camera unavailable: '+e.message}}$('start').onclick=startCamera;$('stop').onclick=()=>{if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;lastFrame=null;motion=null;$('video').srcObject=null;$('cameraPreview').srcObject=null;$('motionValue').textContent='—'};
+const tiny=document.createElement('canvas');tiny.width=120;tiny.height=90;const tctx=tiny.getContext('2d',{willReadFrequently:true});function sampleCamera(t){if(!stream||$('video').readyState<2||t-lastSample<400)return;lastSample=t;tctx.drawImage($('video'),0,0,120,90);let raw=tctx.getImageData(0,0,120,90).data;let cur=new Uint8Array(120*90);for(let i=0;i<cur.length;i++){let j=i*4;cur[i]=(raw[j]*.299+raw[j+1]*.587+raw[j+2]*.114)|0}if(lastFrame){let changed=0,threshold=+$('sensitivity').value*.6+4;for(let i=0;i<cur.length;i++)if(Math.abs(cur[i]-lastFrame[i])>threshold)changed++;motion=100*changed/cur.length;$('motionValue').textContent=motion.toFixed(2)+'%';let entry={timestamp:new Date().toISOString(),motion_pct:+motion.toFixed(3),heading_deg:heading,pitch_deg:pitch,roll_deg:roll};samples.push(entry);if(samples.length>4000)samples.shift();$('sampleLabel').textContent=samples.length+' samples'}lastFrame=cur}
+$('sensor').onclick=async()=>{try{if(typeof DeviceOrientationEvent==='undefined')throw Error('Orientation not supported');if(typeof DeviceOrientationEvent.requestPermission==='function'){let v=await DeviceOrientationEvent.requestPermission();if(v!=='granted')throw Error('Permission denied')}addEventListener('deviceorientation',e=>{heading=Number.isFinite(e.webkitCompassHeading)?e.webkitCompassHeading:Number.isFinite(e.alpha)?(360-e.alpha)%360:null;pitch=Number.isFinite(e.beta)?e.beta:null;roll=Number.isFinite(e.gamma)?e.gamma:null;$('heading').textContent=heading==null?'—':heading.toFixed(0)+'°';$('pitch').textContent=pitch==null?'—':pitch.toFixed(0)+'°';$('roll').textContent=roll==null?'—':roll.toFixed(0)+'°';$('orientLabel').textContent=heading==null?'Heading unavailable':'Heading '+heading.toFixed(0)+'°'},{passive:true});$('orientLabel').textContent='Sensor requested'}catch(e){$('orientLabel').textContent=e.message}};
+$('gps').onclick=()=>{if(!navigator.geolocation){$('coords').textContent='Geolocation unavailable';return}navigator.geolocation.getCurrentPosition(p=>{coords={lat:p.coords.latitude,lon:p.coords.longitude,accuracy_m:p.coords.accuracy};$('coords').textContent=`WGS84 ${coords.lat.toFixed(6)}°, ${coords.lon.toFixed(6)}° ±${Math.round(coords.accuracy_m)} m`;$('locationLabel').textContent='GPS ±'+Math.round(coords.accuracy_m)+' m';focusLon=coords.lon;focusLat=coords.lat;panX=0;panY=0},e=>$('coords').textContent='GPS error: '+e.message,{enableHighAccuracy:true,timeout:12000})};
+function pointOnVideo(e){let rect=$('cameraPreview').getBoundingClientRect();if(!rect.width)return null;return {x:clamp((e.clientX-rect.left)/rect.width,0,1),y:clamp((e.clientY-rect.top)/rect.height,0,1)}}$('cal').onclick=()=>{calMode='cal';points=[];$('calText').textContent='Tap two endpoints on the camera preview of a known-length object.'};$('measure').onclick=()=>{calMode='measure';points=[];$('calText').textContent='Tap two points on the camera preview (same reference plane).'};
+$('cameraPreview').addEventListener('click',e=>{if(!calMode)return;points.push(pointOnVideo(e));if(points.length<2){$('calText').textContent='First point saved. Tap second endpoint.';return}let w=$('video').videoWidth||640,h=$('video').videoHeight||480;let dx=(points[1].x-points[0].x)*w,dy=(points[1].y-points[0].y)*h,px=Math.hypot(dx,dy);if(calMode==='cal'){let v=+$('known').value,unit=$('units').value,cm=v*(unit==='m'?100:unit==='ft'?30.48:1);if(px>2&&cm>0){pxPerCm=px/cm;$('calText').textContent=`Calibrated ${pxPerCm.toFixed(2)} px/cm on this image plane. Recalibrate after changing camera position.`}else $('calText').textContent='Calibration failed: choose a longer reference.'}else{let msg=px.toFixed(1)+' px';if(pxPerCm){let cm=px/pxPerCm;msg+=` / ${cm.toFixed(1)} cm / ${(cm/100).toFixed(3)} m / ${(cm/30.48).toFixed(3)} ft`}$('distanceValue').textContent=msg;$('calText').textContent='Measured '+msg+' (same-plane assumption)'}calMode='';points=[]});
+function project(x,y,z){let a=rotationY,b=rotationX,xx=x*Math.cos(a)+z*Math.sin(a),zz=-x*Math.sin(a)+z*Math.cos(a),yy=y*Math.cos(b)-zz*Math.sin(b),depth=y*Math.sin(b)+zz*Math.cos(b);return {x:viewWidth/2-xx*zoom,y:viewHeight/2-yy*zoom,depth}}function line3(a,b,color,width=1){let p=project(...a),q=project(...b);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke()}
+function earthPoint(lat,lon,r){let la=lat*Math.PI/180,lo=lon*Math.PI/180;return [r*Math.cos(la)*Math.cos(lo),r*Math.sin(la),r*Math.cos(la)*Math.sin(lo)]}
+function worldToScreen(lon,lat,R,level){if(level>=7){let p=earthPoint(lat,lon,R);let v=project(...p);return {x:v.x,y:v.y,front:v.depth>=-R*.04}}let radius=RADIUS[level],latRad=focusLat*Math.PI/180,dx=(lon-focusLon)*111320*Math.cos(latRad),dy=(lat-focusLat)*111320;return {x:viewWidth/2+(dx-panX)/radius*R*zoom,y:viewHeight/2-(dy-panY)/radius*R*zoom,front:true}}
+function drawCountryLines(R,level){if(!$('borders').checked||!countries.length)return;ctx.lineWidth=level>=7?1:.85;ctx.strokeStyle='rgba(200,234,237,.73)';let shown=0;for(let c of countries){for(let ring of c.polygons){let pathOpen=false,last=null;ctx.beginPath();for(let i=0;i<ring.length;i++){let [lon,lat]=ring[i],p=worldToScreen(lon,lat,R,level);if(level>=7){if(!p.front){pathOpen=false;continue}}else if(Math.abs(p.x-viewWidth/2)>R*zoom*1.5||Math.abs(p.y-viewHeight/2)>R*zoom*1.5){pathOpen=false;continue}if(last&&Math.hypot(p.x-last.x,p.y-last.y)>R*1.2){pathOpen=false}if(!pathOpen){ctx.moveTo(p.x,p.y);pathOpen=true}else ctx.lineTo(p.x,p.y);last=p}ctx.stroke()}if($('countryLabels').checked&&v13CountryNames.has(c.name)){let p=worldToScreen(...c.center,R,level);if(p.front&&p.x>40&&p.x<viewWidth-40&&p.y>40&&p.y<viewHeight-40&&shown<16){ctx.fillStyle='#d7edf5';ctx.font=level>=7?'10px system-ui':'12px system-ui';ctx.fillText(c.name,p.x+3,p.y);shown++}}}}
+function modelField(x,y,domain,hour,level){let d=['Community','Mobility','Finance','Health','Culture','Commerce','Environment','Governance','Education','Infrastructure','Conflict / disruption','Recovery','Personal activity'].indexOf(domain)+1;let scale=level<=2?1:level<=5?.55:.27;let a=Math.sin(x*3.9*scale+d*.71+hour*.12),b=Math.cos(y*4.7*scale-d*.34-hour*.09),c=Math.sin((x+y)*5.1*scale+d*.27);return clamp(.48+.19*a+.16*b+.12*c+.17*(pulse(domain,hour)-.5),0,1)}
+function colorField(v,alpha=1){return `hsla(${220-v*200},84%,${25+v*45}%,${alpha})`}
+function drawTerrain(R,level,domain,hour){if(!$('showTerrain').checked)return;const n=level>=7?32:38,step=2*R/n;let relief=+$('relief').value/100;for(let j=0;j<n;j++)for(let i=0;i<n;i++){let xx=(i+.5-n/2)/n*2,yy=(j+.5-n/2)/n*2;if(xx*xx+yy*yy>1.03)continue;let v=modelField(xx,yy,domain,hour,level);if(level>=7){let lon=(i/n*360-180),lat=90-j/n*180,pt=worldToScreen(lon,lat,R,level);if(!pt.front)continue;ctx.fillStyle=colorField(v,.48);ctx.fillRect(pt.x-3,pt.y-3,6,6)}else{let x=viewWidth/2+xx*R*zoom,y=viewHeight/2+yy*R*zoom;let height=relief*v*R*.18;ctx.fillStyle=colorField(v,.8);ctx.fillRect(x-step*zoom*.5,y-step*zoom*.5-height,step*zoom+1,step*zoom+1);if($('contour').checked&&Math.floor(v*8)!==Math.floor(modelField(xx+.02,yy+.02,domain,hour,level)*8)){ctx.fillStyle='#d4eaf4aa';ctx.fillRect(x,y-height,2,2)}}}}
+function drawLocalGrid(R,level){if(!$('showGrid').checked)return;let km=RADIUS[level],spacing=km<=5?1:km<=500?100:km<=1000?250:km<=10000?2000:km<=100000?20000:50000;let s=spacing/km*R*zoom;if(s<9)return;ctx.strokeStyle='rgba(150,215,228,.28)';ctx.lineWidth=1;let cx=viewWidth/2-panX/km*R*zoom,cy=viewHeight/2+panY/km*R*zoom;for(let i=-50;i<=50;i++){let x=cx+i*s,y=cy+i*s;if(x>0&&x<viewWidth){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,viewHeight);ctx.stroke()}if(y>0&&y<viewHeight){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(viewWidth,y);ctx.stroke()}}ctx.fillStyle='#c4e8f2';ctx.font='11px system-ui';ctx.fillText('GRID '+spacing.toLocaleString()+' m (model-local, not surveyed)',15,viewHeight-62)}
+function drawGlobeGrid(R){if(!$('showGrid').checked)return;ctx.strokeStyle='rgba(148,218,229,.34)';ctx.lineWidth=.8;for(let lat=-75;lat<=75;lat+=15){ctx.beginPath();let open=false;for(let lon=-180;lon<=180;lon+=4){let p=worldToScreen(lon,lat,R,9);if(!p.front){open=false;continue}if(!open){ctx.moveTo(p.x,p.y);open=true}else ctx.lineTo(p.x,p.y)}ctx.stroke()}for(let lon=-180;lon<180;lon+=20){ctx.beginPath();let open=false;for(let lat=-90;lat<=90;lat+=4){let p=worldToScreen(lon,lat,R,9);if(!p.front){open=false;continue}if(!open){ctx.moveTo(p.x,p.y);open=true}else ctx.lineTo(p.x,p.y)}ctx.stroke()}}
+function sphere(t){let w=viewWidth,h=viewHeight,level=+$('scale').value,domain=$('domain').value,hour=selectedHour(),p=pulse(domain,hour),R=Math.min(w*.38,h*.42,340),global=level>=7;
+ctx.fillStyle='#07131f';ctx.fillRect(0,0,w,h);ctx.save();ctx.beginPath();ctx.arc(w/2,h/2,R*zoom,0,TAU);ctx.clip();ctx.fillStyle='#153149';ctx.fillRect(0,0,w,h);
+if($('showCamera').checked&&stream&&$('video').readyState>=2&&level<=2){ctx.globalAlpha=.14;ctx.drawImage($('video'),w/2-R*zoom,h/2-R*zoom,2*R*zoom,2*R*zoom);ctx.globalAlpha=1}
+drawTerrain(R,level,domain,hour);if(global)drawGlobeGrid(R);else drawLocalGrid(R,level);drawCountryLines(R,level);
+if($('showMirrors').checked){let groups=activity?.groups||groupsDefault,entries=Object.entries(groups).sort((a,b)=>b[1]-a[1]);for(let i=0;i<entries.length;i++){let a=i/entries.length*TAU+t*.00002,rad=R*.52,ht=Math.log1p(entries[i][1])/Math.log1p(6000)*R*.30,base=[Math.cos(a)*rad,-R*.27,Math.sin(a)*rad],top=[base[0],base[1]+ht,base[2]];if(global)line3(base,top,`hsla(${(i*31+265)%360},95%,75%,.72)`,Math.max(1,3*zoom));else{let xx=w/2+Math.cos(a)*rad*zoom,yy=h/2+Math.sin(a)*rad*.5*zoom;ctx.strokeStyle=`hsla(${(i*31+265)%360},95%,75%,.8)`;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(xx,yy);ctx.lineTo(xx,yy-ht*zoom);ctx.stroke()}}}
+if($('showActors').checked){let n=+$('actors').value;for(let i=0;i<n;i++){let a=seeded(i,2)*TAU+t*.00007*(.3+seeded(i,3)),rad=Math.sqrt(seeded(i,5))*R*.87,x=w/2+Math.cos(a)*rad*zoom,y=h/2+Math.sin(a)*rad*.7*zoom;if(global){let v=project(Math.cos(a)*rad,Math.sin(seeded(i,7)*TAU)*R*.23,Math.sin(a)*rad);x=v.x;y=v.y}ctx.fillStyle=['#ffd27a','#ec93db','#75f5b9','#7ed7ff'][i%4];ctx.globalAlpha=.3+.5*p;ctx.beginPath();ctx.arc(x,y,clamp(1.8*zoom,1,4),0,TAU);ctx.fill()}ctx.globalAlpha=1}
+if($('showPuzzles').checked&&puzzles.length){let count=0;for(let q of puzzles){let lat=Number(q.lat),lon=Number(q.lon);if(!Number.isFinite(lat)||!Number.isFinite(lon))continue;let pt=worldToScreen(lon,lat,R,level);if(!pt.front)continue;if(pt.x<0||pt.x>w||pt.y<0||pt.y>h)continue;ctx.fillStyle='#ff87c2';ctx.fillRect(pt.x-2,pt.y-2,4,4);if(++count>100)break}}
+ctx.restore();ctx.beginPath();ctx.arc(w/2,h/2,R*zoom,0,TAU);ctx.strokeStyle='#7bd6e8';ctx.lineWidth=1.6;ctx.stroke();ctx.fillStyle='#d9eff6';ctx.font='13px system-ui';ctx.fillText('L'+level+' / '+(level===9?'GLOBAL EARTH':RADIUS[level].toLocaleString()+' m model radius'),16,h-38);ctx.font='11px system-ui';ctx.fillText(global?'REAL COUNTRY BORDERS · SYNTHETIC TERRAIN':'LOCAL METRIC GRID · SYNTHETIC TERRAIN',16,h-19);
+$('modelLabel').textContent='L'+level+' / '+(global?'WORLD MAP':'LOCAL MODEL');$('scaleReadout').textContent=`L${level} • ${level===9?'Earth globe (not metric room scale)':RADIUS[level].toLocaleString()+' m radius'} • ${global?'country-border globe':'local metric projection'} • ${coords?'GPS centred':'approximate Chatham reference; not your location'}`;$('insight').textContent=`L${level} ${global?'country borders and continental context':'local zoom/pan metric grid'}: ${domain} synthetic pulse ${Math.round(p*100)}/100 at ${String(hour).padStart(2,'0')}:00. ${stream?'Observed camera motion '+(motion===null?'collecting':motion.toFixed(2)+'%')+'.':'Camera off.'} Synthetic terrain heights and ${$('actors').value} actors do not represent measured elevation or real people.`}
+function timeline(){let w=timeCanvas.width,h=timeCanvas.height;tc.fillStyle='#081929';tc.fillRect(0,0,w,h);let bins=Array.from({length:24},()=>[]);for(let a of samples){let d=new Date(a.timestamp);if(Number.isFinite(a.motion_pct))bins[d.getHours()].push(a.motion_pct)}let domain=$('domain').value;for(let hour=0;hour<24;hour++){let x=25+hour*40;tc.fillStyle='rgba(244,163,105,.45)';let val=pulse(domain,hour);tc.fillRect(x,100-val*75,18,val*75);if(bins[hour].length){let avg=bins[hour].reduce((a,b)=>a+b,0)/bins[hour].length;tc.fillStyle='#62e4f5';tc.beginPath();tc.arc(x+9,100-clamp(avg/100,0,1)*75,4,0,TAU);tc.fill()}tc.fillStyle='#a8c9db';tc.font='10px system-ui';tc.fillText(String(hour).padStart(2,'0'),x,118);if(hour===selectedHour()){tc.strokeStyle='#fff';tc.strokeRect(x-3,13,24,90)}}}
+function animate(t){if(document.hidden){requestAnimationFrame(animate);return}if(playing&&t-lastPlay>850){$('hour').value=(selectedHour()+1)%24;lastPlay=t}sampleCamera(t);sphere(t);if(frameCount++%20===0)timeline();requestAnimationFrame(animate)}requestAnimationFrame(animate);
+canvas.addEventListener('pointerdown',e=>{drag=true;prev={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!drag||!prev)return;let dx=e.clientX-prev.x,dy=e.clientY-prev.y,level=+$('scale').value;if(level>=7){rotationY-=dx*.008;rotationX=clamp(rotationX+dy*.008,-1.45,1.45)}else{let R=Math.min(viewWidth*.38,viewHeight*.42,340),m=RADIUS[level];panX-=dx*m/(R*zoom);panY+=dy*m/(R*zoom)}prev={x:e.clientX,y:e.clientY}});canvas.addEventListener('pointerup',()=>{drag=false;prev=null});canvas.addEventListener('pointercancel',()=>{drag=false;prev=null});canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=clamp(zoom*Math.exp(-e.deltaY*.001),.35,3.5)},{passive:false});
+let touchDist=0;canvas.addEventListener('touchmove',e=>{if(e.touches.length===2){let a=e.touches[0],b=e.touches[1],d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);if(touchDist)zoom=clamp(zoom*d/touchDist,.35,3.5);touchDist=d}},{passive:true});canvas.addEventListener('touchend',()=>touchDist=0);
+function resetAll(){rotationX=.25;rotationY=-.35;zoom=1;panX=0;panY=0}canvas.addEventListener('dblclick',resetAll);$('resetView').onclick=resetAll;$('homeView').onclick=()=>{panX=0;panY=0;zoom=1};$('northUp').onclick=()=>{rotationX=0;rotationY=0};$('levelDown').onclick=()=>{$('scale').value=Math.max(1,+$('scale').value-1);resetAll()};$('levelUp').onclick=()=>{$('scale').value=Math.min(9,+$('scale').value+1);resetAll()};for(let [id,x,y] of [['panLeft',-1,0],['panRight',1,0],['panUp',0,1],['panDown',0,-1]])$(id).onclick=()=>{let step=RADIUS[+$('scale').value]*.15;panX+=x*step;panY+=y*step};
+async function loadData(){try{let r=await fetch('country_borders.json');if(r.ok)countries=(await r.json()).countries}catch(e){$('mapLegend').textContent='Country borders unavailable: '+e.message}try{let r=await fetch('activity_reference.json');if(r.ok){activity=await r.json();$('activity').textContent=activity.total_records.toLocaleString()}}catch(e){}try{let r=await fetch('puzzle_solutions.json');if(r.ok){puzzles=await r.json();$('puzzle').innerHTML='';for(let i=0;i<puzzles.length;i++){let o=document.createElement('option');o.value=i;o.textContent=puzzles[i].id+' · '+puzzles[i].scale;$('puzzle').append(o)}$('puzzle').onchange=updatePuzzle;updatePuzzle()}}catch(e){$('puzzleText').textContent='Puzzle data unavailable: '+e.message}}
+function updatePuzzle(){let q=puzzles[+$('puzzle').value];if(!q)return;$('puzzleText').textContent=`${q.id}: ${q.situation} Workbook: ${q.next||'unspecified'}. Modeled anchor: ${q.lat}, ${q.lon}. Parent/child links are not independently verified.`}loadData();
+$('png').onclick=()=>{let c=document.createElement('canvas');c.width=canvas.width;c.height=canvas.height;c.getContext('2d').drawImage(canvas,0,0);c.toBlob(b=>download('one_sphere_'+Date.now()+'.png',b),'image/png')};$('json').onclick=()=>{let data={version:12,exported:new Date().toISOString(),observed:{samples,heading_deg:heading,pitch_deg:pitch,roll_deg:roll,gps:coords},calibration:{pixels_per_cm:pxPerCm,reference_plane_only:true},historical:{activity_record_count:activity?.total_records||20949,activity_groups:activity?.groups||null,puzzle_count:puzzles.length},simulated:{synthetic_community_reference:25000,rendered_actor_count:+$('actors').value,scenario:$('domain').value,scenario_hour:selectedHour(),pulse_index:pulse($('domain').value,selectedHour()),level:+$('scale').value,application_radius_m:RADIUS[+$('scale').value],pan_offset_m:{east:panX,north:panY},zoom_factor:zoom,geographic_reference:{latitude:focusLat,longitude:focusLon,gps_used:!!coords},country_borders:'Natural Earth low resolution'},limitations:['No depth reconstruction','No observed community population','Sphere terrain and actor trajectories are simulations; border polygons are real-world generalized data','No verified MGRS conversion']};download('geographic_sphere_evidence_'+Date.now()+'.json',new Blob([JSON.stringify(data,null,2)],{type:'application/json'}))};$('clearHistory').onclick=()=>{samples=[];$('sampleLabel').textContent='0 samples';timeline()};
+
+/* V13: labels, inspection, per-level source-based explanations.
+   All existing V12 camera, map, sensor and export controls retained. */
+const v13CountryNames=new Set(['Canada','United States of America','Mexico','Brazil','Argentina','United Kingdom','France','Germany','Spain','Italy','Russia','China','India','Japan','Australia','South Africa','Nigeria','Egypt','Saudi Arabia','Indonesia']);
+const V13_LEVELS={
+1:['ROOM · 5 m radius','What the camera sees','Measured: camera image change and marked same-plane lengths.','Missing: measured depth, room mesh and real object identity.','At this scale the synthetic grid is only a spatial reference.'],
+2:['NEIGHBOURHOOD · 500 m radius','What may be nearby','Historical: activity group counts, not geolocated residents.','Simulated: possible actor positions and 500 m opportunity field.','GPS can locate the map centre; no streets or real residents are loaded.'],
+3:['LOCAL · 1 km radius','How local conditions could vary','Observed: only the phone location and camera readings if enabled.','Simulated: domain pulse and colour index.','No verified local businesses, buildings or street networks are present.'],
+4:['DISTRICT · 10 km radius','How a district could differ','Reference: geographic position and model distance grid.','Simulated: changing terrain, not actual elevation or district indicators.','No district-level statistics have been supplied.'],
+5:['REGION · 100 km radius','How conditions might vary across a region','Reference: approximate country boundary outlines when visible.','Simulated: relative colour field for the chosen domain.','Country borders are not neighbourhood data.'],
+6:['REGIONAL COMMUNITY · 250 km radius','How regional scenarios might interact','Reference: map coordinates and generalized boundaries.','Simulated: community pulse and actors.','There are no measured regional population or activity counts.'],
+7:['NATIONAL · 1,000 km context','Which countries are in view','Reference: real generalized country polygons and country names.','Simulated: colours and terrain values, not country statistics.','The model cannot compare actual national health or finances.'],
+8:['CONTINENTAL · 5,000 km context','Which continents and countries are in view','Reference: real generalized boundaries and continent labels.','Simulated: domain-specific colour field.','No continental indicators or measured elevation are bundled.'],
+9:['GLOBAL EARTH','Where countries and continents are','Reference: Earth sphere, country outlines and names.','Simulated: colours, activity pillars and actor points.','Historical activity totals are not assigned to geographic regions.']
+};
+function v13Legend(){const colors=[.1,.3,.5,.7,.9].map(v=>colorField(v));$('v13Legend').innerHTML=colors.map((c,i)=>`<div style="background:${c}">${['0–20','20–40','40–60','60–80','80–100'][i]}<br>MODEL</div>`).join('')}
+v13Legend();
+function v13Explain(){
+const lv=+$('scale').value,a=V13_LEVELS[lv],group=activity?.groups||groupsDefault;
+const sorted=Object.entries(group).sort((x,y)=>y[1]-x[1]),sum=sorted.reduce((acc,x)=>acc+x[1],0);
+const hr=selectedHour(),dom=$('domain').value;
+$('v13ScaleEvidence').innerHTML=`<b>L${lv} — ${a[0]}</b><p><b>${a[1]}</b></p><p>${a[2]}</p><p>${a[3]}</p><p>${a[4]}</p><p><b>At ${String(hr).padStart(2,'0')}:00:</b> ${dom} hypothetical pulse ${Math.round(pulse(dom,hr)*100)}/100. Model strength is a display index, not a real-world unit.</p>`;
+$('v13TopGroups').innerHTML='<b>YOUR HISTORICAL DATA · 20,949 RECORDS</b><p>These are actual aggregate record counts from your supplied atlas, not population estimates:</p>'+sorted.slice(0,8).map(([name,n])=>`<div style="display:flex;gap:8px;justify-content:space-between"><span>${v13Escape(name)}</span><b>${n.toLocaleString()} · ${(n/sum*100).toFixed(1)}%</b></div>`).join('')+'<p>Share of recorded entries, not time spent or a live population.</p>';
+}
+function v13Escape(s){return String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+function v13PlaceLabels(R,level){
+ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
+let tag=V13_LEVELS[level][0];
+ctx.font='bold 13px system-ui';ctx.fillStyle='#fff';ctx.strokeStyle='#07121c';ctx.lineWidth=4;
+ctx.strokeText(tag,viewWidth/2,20);ctx.fillText(tag,viewWidth/2,20);
+if(level>=7&&$('v13Names').checked&&countries.length){
+let byCont={};
+for(let c of countries){let cont=c.continent;if(!cont||cont==='Seven seas (open ocean)'||byCont[cont])continue;let representative=countries.find(x=>x.continent===cont&&x.name===({Africa:'Chad',Asia:'Kazakhstan',Europe:'Germany','North America':'United States of America','South America':'Brazil',Oceania:'Australia',Antarctica:'Antarctica'}[cont]))||c;byCont[cont]=representative}
+for(let [cont,c] of Object.entries(byCont)){let pt=worldToScreen(...c.center,R,level);if(!pt.front||pt.x<50||pt.x>viewWidth-50||pt.y<50||pt.y>viewHeight-50)continue;ctx.font='bold 12px system-ui';ctx.strokeStyle='#061421';ctx.lineWidth=5;ctx.strokeText(cont.toUpperCase(),pt.x,pt.y+17);ctx.fillStyle='#ffe3a8';ctx.fillText(cont.toUpperCase(),pt.x,pt.y+17)}
+}
+if(level<=6&&$('v13GridLabels').checked){
+let r=RADIUS[level],lat=focusLat+panY/111320,lon=focusLon+panX/(111320*Math.cos(focusLat*Math.PI/180));
+ctx.font='12px system-ui';ctx.fillStyle='#fff';ctx.strokeStyle='#071421';ctx.lineWidth=4;
+const msg=`${coords?'GPS CENTRE':'ILLUSTRATIVE REFERENCE'} ≈ ${lat.toFixed(4)}° N, ${Math.abs(lon).toFixed(4)}° ${lon<0?'W':'E'} · ${r.toLocaleString()} m radius`;
+ctx.strokeText(msg,viewWidth/2,viewHeight-88);ctx.fillText(msg,viewWidth/2,viewHeight-88);
+}
+if($('v13ValueLabels').checked){
+let domain=$('domain').value,h=selectedHour(),locs=[[-.52,-.38],[.52,-.38],[-.52,.38],[.52,.38]];
+ctx.font='bold 11px system-ui';for(let [x,y] of locs){let val=Math.round(modelField(x,y,domain,h,level)*100);let px=viewWidth/2+x*R*zoom,py=viewHeight/2+y*R*zoom;
+ctx.strokeStyle='#06131d';ctx.lineWidth=4;ctx.strokeText('MODEL '+val,px,py);ctx.fillStyle='#f8e3b2';ctx.fillText('MODEL '+val,px,py)}
+}
+ctx.restore()
+}
+function v13Pick(e){
+const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+let level=+$('scale').value,R=Math.min(viewWidth*.38,viewHeight*.42,340),u=(x-viewWidth/2)/(R*zoom),v=(y-viewHeight/2)/(R*zoom);
+if(u*u+v*v>1){$('v13Readout').textContent='Outside the mapped sphere. Tap inside the sphere to inspect a modeled value.';return}
+let value=modelField(u,v,$('domain').value,selectedHour(),level),lat=focusLat+(panY-v*RADIUS[level])/111320,lon=focusLon+(panX+u*RADIUS[level])/(111320*Math.cos(focusLat*Math.PI/180));
+let nearest=null,dist=Infinity;
+if(level>=7){for(let c of countries){let p=worldToScreen(...c.center,R,level);if(!p.front)continue;let d=Math.hypot(p.x-x,p.y-y);if(d<dist){dist=d;nearest=c}}}
+let place=level>=7?(nearest&&dist<75?nearest.name+' ('+nearest.continent+')':'Global view — no country confidently selected'):`Approximate map coordinate ${lat.toFixed(5)}°, ${lon.toFixed(5)}°`;
+let info=`${place}. Simulated ${$('domain').value} index: ${Math.round(value*100)}/100 at ${String(selectedHour()).padStart(2,'0')}:00.`;
+$('v13Readout').textContent=info;
+$('v13Detail').innerHTML=`<b>SELECTED LOCATION · L${level}</b><p>${v13Escape(place)}</p><p><b>Hypothetical domain score: ${Math.round(value*100)}/100</b> (no physical unit, not an observation)</p><p>Scale radius: ${RADIUS[level].toLocaleString()} m. ${coords?'GPS is available as map-centre reference.':'Using an approximate Chatham map reference; device GPS not yet obtained.'}</p><p>Actual historical activity totals are shared across scales; they are not geocoded to this selected position.</p>`;
+}
+let v13PointerStart=null;
+canvas.addEventListener('pointerdown',e=>{v13PointerStart={x:e.clientX,y:e.clientY}});
+canvas.addEventListener('pointerup',e=>{if(v13PointerStart&&Math.hypot(e.clientX-v13PointerStart.x,e.clientY-v13PointerStart.y)<8)v13Pick(e);v13PointerStart=null});
+let v13OldSphere=sphere;
+sphere=function(t){v13OldSphere(t);const R=Math.min(viewWidth*.38,viewHeight*.42,340);v13PlaceLabels(R,+$('scale').value)};
+let v13PrevKey='';
+setInterval(()=>{let key=[$('scale').value,$('domain').value,$('hour').value,$('intensity').value,activity?.total_records].join('|');if(key!==v13PrevKey){v13Explain();v13PrevKey=key}},600);
+v13Explain();
+</script>
+<script>
+'use strict';
+/* V14 continuous geodetic zoom.
+   Camera position = GPS antenna/phone coordinate, NOT a projected object location.
+   MGRS UTM conversion for latitudes 80S–84N; polar UPS deliberately unsupported. */
+const V14_WGS84_A=6378137,V14_F=1/298.257223563,V14_E2=V14_F*(2-V14_F),V14_EP2=V14_E2/(1-V14_E2);
+let v14Log=2.69897,v14LastRadius=500,v14RenderCount=0;
+function v14Radius(){return Math.pow(10,v14Log)}
+function v14Fmt(m){return m<1?(m*100).toFixed(1)+' cm':m<1000?m.toFixed(m<10?2:0)+' m':m<1e6?(m/1000).toFixed(2)+' km':(m/1e6).toFixed(2)+' Mm'}
+function v14SetLog(v){v14Log=clamp(v,-2,Math.log10(2e7));$('v14Zoom').value=v14Log;zoom=1;v14Update()}
+function v14Utm(lat,lon){
+if(lat < -80||lat >84)return null;
+let z=Math.floor((lon+180)/6)+1;z=clamp(z,1,60);
+if(lat>=56&&lat<64&&lon>=3&&lon<12)z=32;
+if(lat>=72&&lat<84){if(lon>=0&&lon<9)z=31;else if(lon>=9&&lon<21)z=33;else if(lon>=21&&lon<33)z=35;else if(lon>=33&&lon<42)z=37}
+let l=lat*Math.PI/180,L=lon*Math.PI/180,L0=(z*6-183)*Math.PI/180;
+let e=V14_E2,ep=V14_EP2,s=Math.sin(l),c=Math.cos(l),t=Math.tan(l),N=V14_WGS84_A/Math.sqrt(1-e*s*s),T=t*t,C=ep*c*c,A=c*(L-L0);
+let M=V14_WGS84_A*((1-e/4-3*e*e/64-5*e**3/256)*l-(3*e/8+3*e*e/32+45*e**3/1024)*Math.sin(2*l)+(15*e*e/256+45*e**3/1024)*Math.sin(4*l)-(35*e**3/3072)*Math.sin(6*l));
+let E=500000+.9996*N*(A+(1-T+C)*A**3/6+(5-18*T+T*T+72*C-58*ep)*A**5/120);
+let Y=.9996*(M+N*t*(A*A/2+(5-T+9*C+4*C*C)*A**4/24+(61-58*T+T*T+600*C-330*ep)*A**6/720));
+if(lat<0)Y+=10000000;
+return {zone:z,band:'CDEFGHJKLMNPQRSTUVWX'[Math.min(19,Math.floor((lat+80)/8))],easting:E,northing:Y,hemisphere:lat>=0?'N':'S'};
+}
+function v14Mgrs(lat,lon,precision=5){
+let u=v14Utm(lat,lon);if(!u)return {text:'MGRS UPS/polar zone not supported',utm:null};
+const columns=['ABCDEFGH','JKLMNPQR','STUVWXYZ'],rows='ABCDEFGHJKLMNPQRSTUV';
+let col=Math.floor(u.easting/1e5),row=Math.floor(u.northing/1e5)%20;
+if(col<1||col>8)return {text:'Outside standard UTM easting',utm:u};
+let c=columns[(u.zone-1)%3][col-1],r=rows[(row+((u.zone%2===0)?5:0))%20];
+let divisor=10**(5-precision),ee=Math.floor((u.easting%1e5)/divisor),nn=Math.floor((u.northing%1e5)/divisor);
+let digits=precision?` ${String(ee).padStart(precision,'0')} ${String(nn).padStart(precision,'0')}`:'';
+return {text:`${u.zone}${u.band} ${c}${r}${digits}`,utm:u,cell100k:`${u.zone}${u.band} ${c}${r}`};
+}
+function v14Step(m){let target=m/5,ex=Math.floor(Math.log10(Math.max(1e-6,target))),pow=10**ex;return [1,2,5,10].map(x=>x*pow).find(x=>x>=target)||10*pow}
+function v14Level(radius){if(radius<=5)return 1;if(radius<=500)return 2;if(radius<=1000)return 3;if(radius<=10000)return 4;if(radius<=100000)return 5;if(radius<=250000)return 6;if(radius<=1000000)return 7;if(radius<=5000000)return 8;return 9}
+function v14Update(){
+let radius=v14Radius(),level=v14Level(radius);
+$('scale').value=level;
+$('v14Scale').textContent=`Visible radius: ${v14Fmt(radius)} • ${radius<1?'sub-metre model only':'continuous logarithmic scale'}`;
+$('v14Level').textContent=`L${level} / ${radius.toExponential(2)} m`;
+let centreLat=focusLat+panY/111320,centreLon=focusLon+panX/(111320*Math.max(.05,Math.cos(focusLat*Math.PI/180)));
+let centre=v14Mgrs(centreLat,centreLon),camera=coords?v14Mgrs(coords.lat,coords.lon):null;
+$('v14MGRS').textContent=`MAP CENTRE MGRS: ${centre.text} | WGS84 ${centreLat.toFixed(6)}°, ${centreLon.toFixed(6)}°`;
+$('v14Camera').textContent=coords?`PHONE GPS: ${camera.text} | ±${Math.round(coords.accuracy_m)} m • camera optical readings linked to phone position, not individual pixels`:'PHONE MGRS: UNAVAILABLE — tap Locate phone / GPS; map centre is only a reference.';
+$('v14GridInfo').textContent=`MGRS/UTM zone ${centre.utm?.zone||'—'} · visible grid step ${v14Fmt(v14Step(radius))} · ${centre.utm?'UTM WGS84, grid north approximate':'outside supported UTM'}`;
+$('v13Readout').textContent=`Map ${v14Fmt(radius)} radius • ${centre.text} • ${coords?'GPS-linked phone location':'reference only; GPS not acquired'}. Camera motion is measured in the image, not geolocated scene objects.`;
+}
+$('v14Zoom').oninput=e=>v14SetLog(+e.target.value);
+$('v14In').onclick=()=>v14SetLog(v14Log-Math.log10(2));
+$('v14Out').onclick=()=>v14SetLog(v14Log+Math.log10(2));
+$('v14Gps').onclick=()=>$('gps').click();
+$('v14North').onclick=()=>{v14CenterGlobe();v14Update()};
+$('v14Invert').onchange=()=>{};
+let v14PreviousWheel=null;
+canvas.addEventListener('wheel',e=>{e.preventDefault();v14SetLog(v14Log+e.deltaY*.001)}, {passive:false});
+let v14Pinch=0;
+canvas.addEventListener('touchmove',e=>{if(e.touches.length!==2){v14Pinch=0;return}let a=e.touches[0],b=e.touches[1],d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);if(v14Pinch>0)v14SetLog(v14Log-Math.log10(d/v14Pinch));v14Pinch=d},{passive:true});
+canvas.addEventListener('touchend',()=>{v14Pinch=0},{passive:true});
+const v14OldPointer=()=>{}; // original pan event retained, remapped through zoom below
+const v14OldSphere=sphere;
+function v14DrawGrid(radius,R){
+if(!$('showGrid').checked||radius>600000)return;
+let lat0=focusLat+panY/111320,lon0=focusLon+panX/(111320*Math.cos(focusLat*Math.PI/180)),u=v14Utm(lat0,lon0);
+if(!u)return;
+let step=v14Step(radius),px=step/radius*R;
+if(px<12||px>R*2)return;
+let cx=viewWidth/2,cy=viewHeight/2;
+let east0=u.easting, north0=u.northing;
+ctx.save();ctx.strokeStyle='rgba(188,238,245,.5)';ctx.fillStyle='#e7f5fc';ctx.font='10px system-ui';ctx.textAlign='center';
+let minE=east0-radius*1.7,maxE=east0+radius*1.7,minN=north0-radius*1.7,maxN=north0+radius*1.7;
+let nx=0,ny=0;
+for(let e=Math.ceil(minE/step)*step;e<=maxE&&nx<65;e+=step,nx++){let x=cx+(e-east0)/radius*R;if(x<0||x>viewWidth)continue;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,viewHeight);ctx.stroke()}
+for(let n=Math.ceil(minN/step)*step;n<=maxN&&ny<65;n+=step,ny++){let y=cy-(n-north0)/radius*R;if(y<0||y>viewHeight)continue;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(viewWidth,y);ctx.stroke()}
+if($('v14MGRSLabels').checked){
+let count=0;
+for(let e=Math.ceil(minE/step)*step;e<=maxE&&count<90;e+=step){
+for(let n=Math.ceil(minN/step)*step;n<=maxN&&count<90;n+=step){
+let x=cx+(e+step/2-east0)/radius*R,y=cy-(n+step/2-north0)/radius*R;
+if(x<30||x>viewWidth-30||y<36||y>viewHeight-75)continue;
+let cell=v14CellFromUtm(u,e+step/2,n+step/2,step);
+ctx.strokeStyle='#041321';ctx.lineWidth=3;ctx.strokeText(cell,x,y);
+ctx.fillStyle='#e6f8ff';ctx.fillText(cell,x,y);ctx.strokeStyle='rgba(188,238,245,.5)';count++;
+}}}
+ctx.restore();
+}
+function v14CellFromUtm(u,E,N,step){
+let cols=['ABCDEFGH','JKLMNPQR','STUVWXYZ'],rows='ABCDEFGHJKLMNPQRSTUV',col=Math.floor(E/1e5);
+if(col<1||col>8)return `E${Math.floor(E/step)} N${Math.floor(N/step)}`;
+let r=(Math.floor(N/1e5)%20+20)%20,c=cols[(u.zone-1)%3][col-1],rr=rows[(r+(u.zone%2===0?5:0))%20];
+let precision=clamp(Math.ceil(Math.log10(100000/step)),0,5),div=10**(5-precision);
+return `${u.zone}${u.band} ${c}${rr} ${String(Math.floor(((E%1e5)+1e5)%1e5/div)).padStart(precision,'0')}/${String(Math.floor(((N%1e5)+1e5)%1e5/div)).padStart(precision,'0')}`;
+}
+function v14DrawCameraMarker(radius,R){
+if(!$('v14CamMarker').checked||!coords)return;
+let east=(coords.lon-focusLon)*111320*Math.cos(focusLat*Math.PI/180)-panX;
+let north=(coords.lat-focusLat)*111320-panY;
+let x=viewWidth/2+east/radius*R,y=viewHeight/2-north/radius*R;
+if(x<0||x>viewWidth||y<0||y>viewHeight)return;
+ctx.save();ctx.strokeStyle='#fff';ctx.fillStyle='#ffcd73';ctx.lineWidth=2;
+ctx.beginPath();ctx.arc(x,y,7,0,TAU);ctx.fill();ctx.stroke();
+if(Number.isFinite(heading)){let a=heading*Math.PI/180;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.sin(a)*31,y-Math.cos(a)*31);ctx.strokeStyle='#ffcd73';ctx.lineWidth=3;ctx.stroke()}
+ctx.font='bold 12px system-ui';ctx.strokeStyle='#071522';ctx.lineWidth=4;ctx.strokeText('PHONE / CAMERA GPS',x+8,y-12);ctx.fillStyle='#fff';ctx.fillText('PHONE / CAMERA GPS',x+8,y-12);ctx.restore();
+}
+sphere=function(t){
+let radius=v14Radius(),level=v14Level(radius),global=radius>200000;
+let oldLevel=$('scale').value,oldZoom=zoom,oldRotationX=rotationX,oldRotationY=rotationY;
+$('scale').value=global?Math.max(7,level):Math.min(6,level);
+let R=Math.min(viewWidth*.38,viewHeight*.42,340);
+if(!global){zoom=RADIUS[+$('scale').value]/radius;
+}else{zoom=clamp(6371000/radius,.45,7);}
+v14OldSphere(t);
+zoom=oldZoom;
+if(!global){ctx.save();ctx.beginPath();ctx.arc(viewWidth/2,viewHeight/2,R,0,TAU);ctx.clip();v14DrawGrid(radius,R);v14DrawCameraMarker(radius,R);ctx.restore()}
+
+if(v14RenderCount++%30===0)v14Update();
+};
+const v14OldReset=resetAll;
+resetAll=function(){v14OldReset();v14SetLog(2.69897)};
+$('levelDown').onclick=()=>v14SetLog(v14Log-.5);
+$('levelUp').onclick=()=>v14SetLog(v14Log+.5);
+$('homeView').onclick=()=>{panX=0;panY=0;v14Update()};
+$('northUp').onclick=()=>{v14CenterGlobe();v14Update()};
+for(let [id,x,y] of [['panLeft',-1,0],['panRight',1,0],['panUp',0,1],['panDown',0,-1]])$(id).onclick=()=>{let step=v14Radius()*.15;panX+=x*step;panY+=y*step;v14Update()};
+const v14OldGps=$('gps').onclick;
+$('gps').onclick=()=>{v14OldGps();setTimeout(v14Update,1500)};
+$('v14MGRSLabels').onchange=v14Update;
+// Centre the actual front-facing hemisphere on the reference longitude.
+// Old globe was looking at a hemisphere unrelated to the local reference.
+function v14CenterGlobe(){rotationX=0;rotationY=(focusLon-90)*Math.PI/180;}
+// Camera observations: link a *phone GPS position* and MGRS string to every sample.
+const v14OriginalSample=sampleCamera;
+sampleCamera=function(t){let before=samples.length;v14OriginalSample(t);if(samples.length>before){let s=samples[samples.length-1];s.phone_gps=coords?{...coords}:null;s.phone_mgrs=coords?v14Mgrs(coords.lat,coords.lon).text:null;s.location_meaning='Phone position only, not location of camera image features';s.view_radius_m=v14Radius();}};
+// Use a clean local flat field with a real metric grid, not the inverted floating block terrain.
+const v14OriginalTerrain=drawTerrain;
+drawTerrain=function(R,level,domain,hour){
+ if(!$('showTerrain').checked)return;
+ if(v14Radius()>200000){return;} // geographic context first at national/global scales
+ let n=44,cell=2*R/n;
+ ctx.save();
+ for(let j=0;j<n;j++)for(let i=0;i<n;i++){
+ let u=(i+.5-n/2)*2/n,v=(j+.5-n/2)*2/n;
+ if(u*u+v*v>1.02)continue;
+ let val=modelField(u,v,domain,hour,level);
+ ctx.fillStyle=colorField(val,.52);
+ ctx.fillRect(viewWidth/2+(i-n/2)*cell*zoom,viewHeight/2+(j-n/2)*cell*zoom,cell*zoom+1,cell*zoom+1);
+ }
+ ctx.restore();
+};
+// Keep labels from piling up on top of one another; country names remain selectable.
+const v14OriginalCountries=drawCountryLines;
+drawCountryLines=function(R,level){
+ if(!$('borders').checked||!countries.length)return;
+ ctx.save();ctx.strokeStyle='rgba(192,233,240,.75)';ctx.lineWidth=.8;
+ let global=v14Radius()>200000,placed=[];
+ for(let c of countries){for(let ring of c.polygons){ctx.beginPath();let open=false,last=null;
+ for(let point of ring){let p=worldToScreen(point[0],point[1],R,level);
+ if(global&&!p.front){open=false;last=null;continue}
+ if(last&&Math.hypot(p.x-last.x,p.y-last.y)>R*1.1){open=false}
+ if(!open){ctx.moveTo(p.x,p.y);open=true}else ctx.lineTo(p.x,p.y);last=p}
+ ctx.stroke();}
+ if(global&&$('countryLabels').checked){let p=worldToScreen(...c.center,R,level);if(!p.front||p.x<25||p.x>viewWidth-25||p.y<25||p.y>viewHeight-60)continue;
+ let label=c.name,importance=['Canada','United States of America','Mexico','Brazil','China','Russia','India','Australia','France','Germany','United Kingdom','Japan'].includes(label)?2:1;
+ let half=label.length*3.1+4;if(placed.some(q=>Math.abs(q.x-p.x)<q.half+half+5&&Math.abs(q.y-p.y)<17))continue;
+ if(placed.length>=22)continue;placed.push({x:p.x,y:p.y,half});ctx.font=importance===2?'bold 11px system-ui':'10px system-ui';ctx.lineWidth=3;ctx.strokeStyle='#071421';ctx.strokeText(label,p.x,p.y);ctx.fillStyle='#f0f8ff';ctx.fillText(label,p.x,p.y);ctx.strokeStyle='rgba(192,233,240,.75)';ctx.lineWidth=.8;
+ }}ctx.restore();
+};
+const v14OldGpsClick=$('gps').onclick;
+$('gps').onclick=()=>{v14OldGpsClick();setTimeout(()=>{v14CenterGlobe();v14Update()},1800)};
+// Override V13's old radius caption with the continuous physical radius.
+v13PlaceLabels=function(R,level){ctx.save();ctx.font='bold 13px system-ui';ctx.textAlign='center';ctx.lineWidth=4;ctx.strokeStyle='#061320';ctx.fillStyle='#fff';let text='CONTINUOUS RADIUS '+v14Fmt(v14Radius());ctx.strokeText(text,viewWidth/2,23);ctx.fillText(text,viewWidth/2,23);ctx.restore()};
+// Existing pointer handler uses the legacy level scale: correct its drag gain.
+canvas.addEventListener('pointermove',()=>{let l=v14Level(v14Radius());zoom=RADIUS[Math.min(6,l)]/v14Radius()},true);
+v14CenterGlobe();v14Update();
+</script>
+
+<script>
+/* V16 observation-first bridge. All motion cell IDs are screen grid IDs,
+   not tracked persons. All geographic influence is a scenario projection. */
+const v16Video=$('v16Camera'),v16Canvas=$('v16Overlay'),v16Ctx=v16Canvas.getContext('2d');
+const v16Tiny=document.createElement('canvas');v16Tiny.width=128;v16Tiny.height=128;
+const v16TC=v16Tiny.getContext('2d',{willReadFrequently:true});
+let v16Prev=null,v16Cells=[],v16Selected=new Set(),v16SelectMode=false,v16Drag=false,v16Last=0,v16LastAggregate=0,v16Speed=0,v16Observed=0,v16Trend=[],v16GPS=[];
+function v16N(){return +$('v16Grid').value}
+function v16ID(x,y){return `${x},${y}`}
+function v16Format(val){return Number.isFinite(val)?val.toFixed(1):'—'}
+function v16UpdateCamera(){
+if(stream&&v16Video.srcObject!==stream){v16Video.srcObject=stream;v16Video.play().catch(()=>{})}
+if(!stream&&v16Video.srcObject){v16Video.srcObject=null;v16Prev=null}
+}
+function v16Sample(t){
+v16UpdateCamera();
+if(!stream||v16Video.readyState<2||t-v16Last<300)return;
+let dt=v16Last?(t-v16Last)/1000:.3;v16Last=t;
+v16TC.drawImage(v16Video,0,0,128,128);
+let pix=v16TC.getImageData(0,0,128,128).data,gray=new Uint8Array(16384);
+for(let i=0;i<gray.length;i++)gray[i]=(.299*pix[i*4]+.587*pix[i*4+1]+.114*pix[i*4+2])|0;
+let n=v16N(),sums=new Float64Array(n*n),counts=new Uint16Array(n*n),cellSize=128/n;
+if(v16Prev){for(let y=0;y<128;y++)for(let x=0;x<128;x++){let i=y*128+x,k=Math.min(n-1,Math.floor(x/cellSize))+n*Math.min(n-1,Math.floor(y/cellSize));sums[k]+=Math.abs(gray[i]-v16Prev[i]);counts[k]++}}
+v16Prev=gray;
+let threshold=+$('v16Threshold').value;
+v16Cells=Array.from({length:n*n},(_,i)=>({id:v16ID(i%n,Math.floor(i/n)),x:i%n,y:Math.floor(i/n),motion:counts[i]?sums[i]/counts[i]:0,active:counts[i]?sums[i]/counts[i]>threshold:false}));
+let aggregate=v16Cells.reduce((a,c)=>a+c.motion,0)/v16Cells.length;
+v16Speed=.7*v16Speed+.3*Math.abs(aggregate-v16LastAggregate)/Math.max(dt,.1);
+v16LastAggregate=aggregate;v16Observed=v16Cells.filter(c=>c.active).length;
+v16Trend.push({t:Date.now(),motion:aggregate,active:v16Observed,speed:v16Speed});
+if(v16Trend.length>600)v16Trend.shift();
+v16Draw();v16Stats();
+}
+function v16Draw(){
+let rect=v16Canvas.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1),w=Math.max(1,rect.width),h=Math.max(1,rect.height);
+if(v16Canvas.width!==Math.round(w*dpr)||v16Canvas.height!==Math.round(h*dpr)){v16Canvas.width=Math.round(w*dpr);v16Canvas.height=Math.round(h*dpr)}
+v16Ctx.setTransform(dpr,0,0,dpr,0,0);v16Ctx.clearRect(0,0,w,h);
+let n=v16N(),cw=w/n,ch=h/n;
+v16Ctx.font=`${Math.max(9,Math.min(13,w/n/3))}px system-ui`;
+for(let y=0;y<n;y++)for(let x=0;x<n;x++){
+let id=v16ID(x,y),c=v16Cells[y*n+x],val=c?.motion||0,sel=v16Selected.has(id);
+v16Ctx.fillStyle=sel?'rgba(255,197,89,.27)':c?.active?`rgba(255,87,92,${Math.min(.58,.10+val/90)})`:'rgba(24,113,133,.05)';
+v16Ctx.fillRect(x*cw,y*ch,cw,ch);
+v16Ctx.strokeStyle=sel?'#ffe089':'rgba(143,233,239,.45)';v16Ctx.lineWidth=sel?2.3:.7;v16Ctx.strokeRect(x*cw,y*ch,cw,ch);
+v16Ctx.fillStyle=sel?'#ffe6a3':'#c8f8fa';v16Ctx.fillText(`${x+1}:${y+1}`,x*cw+3,y*ch+12);
+if(c&&c.active){v16Ctx.fillStyle='#ffdbb1';v16Ctx.fillText(val.toFixed(0),x*cw+3,y*ch+25)}
+}
+}
+function v16CellFromEvent(e){let r=v16Canvas.getBoundingClientRect(),x=Math.floor((e.clientX-r.left)/r.width*v16N()),y=Math.floor((e.clientY-r.top)/r.height*v16N());return x>=0&&y>=0&&x<v16N()&&y<v16N()?v16ID(x,y):null}
+function v16Pick(e){let id=v16CellFromEvent(e);if(!id)return;if(!v16Selected.has(id))v16Selected.add(id);v16Draw();v16Stats()}
+v16Canvas.addEventListener('pointerdown',e=>{if(!v16SelectMode)return;v16Drag=true;v16Canvas.setPointerCapture(e.pointerId);v16Pick(e)});
+v16Canvas.addEventListener('pointermove',e=>{if(v16Drag)v16Pick(e)});
+v16Canvas.addEventListener('pointerup',()=>{v16Drag=false});
+$('v16Expand').onclick=()=>{document.body.classList.toggle('v16expanded');$('v16Expand').textContent=document.body.classList.contains('v16expanded')?'Close expanded camera':'Expand camera / grid';setTimeout(v16Draw,100)};
+$('v16Select').onclick=()=>{v16SelectMode=!v16SelectMode;$('v16Select').textContent=v16SelectMode?'Selection ON · drag cells':'Select grid cells'};
+$('v16Clear').onclick=()=>{v16Selected.clear();v16Draw();v16Stats()};
+$('v16Grid').onchange=()=>{v16Selected.clear();v16Prev=null;v16Cells=[];v16Draw();v16Stats()};
+function v16Stats(){
+$('v16Hot').textContent=v16Observed;
+$('v16Speed').textContent=v16Format(v16Speed)+' gray/s';
+$('v16Selected').textContent=v16Selected.size;
+let sel=v16Cells.filter(c=>v16Selected.has(c.id)),avg=sel.length?sel.reduce((a,c)=>a+c.motion,0)/sel.length:0;
+$('v16Read').textContent=`${v16N()}×${v16N()} IMAGE GRID · ${v16Observed} active cells · ${v16Selected.size} selected · selected mean image change ${avg.toFixed(1)}/255 gray levels per sample. X=column, Y=row, Z=unknown. Motion rate describes image intensity change, not object velocity in m/s.`;
+v16Scales();
+}
+function v16Scales(){
+let h=selectedHour(),domain=$('domain').value,r=v14Radius(),scale=v14Level(r);
+let obs=stream?Math.min(1,v16Observed/(v16N()**2)):0;
+let base=obs*Math.min(1,v16Speed/50+.25);
+let decay=+$('v16Decay').value;
+let names=['Room','Neighbourhood','Local','District','Region','Regional','National','Continental','Global'];
+$('v16Scales').innerHTML=names.map((name,i)=>{
+let level=i+1,atten=Math.exp(-(level-1)/decay),modeled=base*atten*100,tag=level===scale?' ● VIEW':'';
+return `<div><b>L${level} ${name}${tag}</b><strong>${modeled.toFixed(1)} / 100</strong><small>HYPOTHETICAL influence, decay ${atten.toFixed(3)}×</small></div>`}).join('');
+let gps=coords?v14Mgrs(coords.lat,coords.lon).text:null;
+$('v16GPS').textContent=gps?`PHONE MGRS ${gps} · GPS ±${Math.round(coords.accuracy_m)} m. Camera cell positions are NOT geolocated. Selected cells: ${v16Selected.size}.`:'GPS not acquired: no MGRS camera origin. Camera image bins are not geographic parcels.';
+}
+function v16Export(){
+let chosen=v16Cells.filter(c=>v16Selected.has(c.id)),xs=chosen.map(c=>c.x),ys=chosen.map(c=>c.y);
+let bounding=chosen.length?{x_min:Math.min(...xs),x_max:Math.max(...xs),y_min:Math.min(...ys),y_max:Math.max(...ys),z_min:null,z_max:null}:null;
+let data={schema:'v16-live-influence',timestamp:new Date().toISOString(),provenance:{camera_grid:'observed pixel brightness change',cell_id:'screen bins, not tracked objects',z:'unknown without depth',higher_level:'hypothetical attenuated response, not measured effect'},phone_gps:coords,phone_mgrs:coords?v14Mgrs(coords.lat,coords.lon).text:null,heading_deg:heading,grid_size:v16N(),selected_cell_ids:[...v16Selected],image_selection_bounding_box:bounding,calibration_px_per_cm:pxPerCm,calibration_same_plane_only:true,cell_metrics:chosen,aggregate:v16Trend.slice(-120),scale_radius_m:v14Radius(),scenario_domain:$('domain').value};
+let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});download('v16_camera_selection_'+Date.now()+'.json',blob);
+}
+$('v16Capture').onclick=v16Export;
+let v16LastDraw=0;
+function v16Loop(t){if(!document.hidden){v16Sample(t);if(t-v16LastDraw>1200){v16LastDraw=t;v16Scales()}}requestAnimationFrame(v16Loop)}
+requestAnimationFrame(v16Loop);
+const v16PreviousSphere=sphere;
+sphere=function(t){
+v16PreviousSphere(t);
+if(!stream)return;
+let w=viewWidth,h=viewHeight,R=Math.min(w*.38,h*.42,340),n=v16N(),level=v14Level(v14Radius());
+let a=Math.min(1,v16Observed/(n*n)),decay=+$('v16Decay').value;
+let influence=a*Math.exp(-(level-1)/decay);
+if(!influence)return;
+ctx.save();ctx.globalCompositeOperation='screen';
+let cx=w/2,cy=h/2,rad=R*.7;
+let grad=ctx.createRadialGradient(cx,cy,0,cx,cy,rad);
+grad.addColorStop(0,`rgba(255,105,45,${Math.min(.8,influence*.7)})`);
+grad.addColorStop(1,'rgba(255,105,45,0)');
+ctx.fillStyle=grad;ctx.beginPath();ctx.arc(cx,cy,rad,0,TAU);ctx.fill();ctx.restore();
+ctx.save();ctx.fillStyle='#fff2c7';ctx.font='bold 12px system-ui';
+ctx.fillText(`LIVE CAMERA: ${v16Observed} ACTIVE IMAGE CELLS`,14,55);
+ctx.fillText(`L${level} HYPOTHETICAL INFLUENCE: ${(influence*100).toFixed(1)}/100`,14,71);
+ctx.fillText(`X image cols · Y image rows · Z UNKNOWN`,14,87);
+ctx.restore();
+};
+v16Stats();
+</script>
+</body></html>

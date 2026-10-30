@@ -1,0 +1,1 @@
+V15 OUTSIDE-FACING GLOBE. Fixed globe projection x handedness at 3D projection source, so east is right when north-up and near-side country outlines remain visible. Globe drag adjusted to match. All V14 camera/MGRS/zoom features retained. Run pyto_launcher.py, open http://localhost:8765. Camera/GPS require iPhone permissions. Synthetic terrain is not measured elevation.
